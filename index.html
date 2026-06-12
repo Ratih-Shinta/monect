@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>monect — kelola duitmu</title>
+
+  <!-- favicon placeholder (nanti bisa diganti SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◈</text></svg>" />
+
+  <!-- google fonts: Space Grotesk untuk display, Inter untuk body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- SIDEBAR  -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__brand">
+      <span class="brand-mark">◈</span>
+      <span class="brand-name">monect</span>
+    </div>
+
+    <nav class="sidebar__nav">
+      <button class="nav-item active" data-tab="dashboard">
+        <span class="nav-icon">⬡</span>
+        <span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-item" data-tab="analytics">
+        <span class="nav-icon">◎</span>
+        <span class="nav-label">Analytics</span>
+      </button>
+      <button class="nav-item" data-tab="goals">
+        <span class="nav-icon">◈</span>
+        <span class="nav-label">Goals</span>
+      </button>
+      <button class="nav-item" data-tab="recurring">
+        <span class="nav-icon">↻</span>
+        <span class="nav-label">Recurring</span>
+      </button>
+      <button class="nav-item" data-tab="report">
+        <span class="nav-icon">□</span>
+        <span class="nav-label">Laporan</span>
+      </button>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="user-chip">
+        <div class="user-avatar" id="user-avatar"></div>
+        <span class="user-name" id="sidebar-username"></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="main-content">
+
+    <!-- DASHBOARD -->
+    <section class="tab-panel" id="tab-dashboard">
+      <header class="page-header">
+        <div>
+          <p class="page-eyebrow" id="dashboard-eyebrow">Juni 2025</p>
+          <h1 class="page-title">Hai, <span id="header-username"></span> 👋</h1>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="month-nav" id="month-nav">
+            <button class="month-nav-btn" id="btn-prev-month">‹</button>
+            <span class="month-nav-label" id="month-nav-label">Jun 2025</span>
+            <button class="month-nav-btn" id="btn-next-month">›</button>
+          </div>
+          <button class="btn-primary" id="btn-open-modal">+ Tambah Transaksi</button>
+        </div>
+      </header>
+
+      <!-- bento grid dashboard -->
+      <div class="bento-grid" id="bento-dashboard">
+
+        <!-- card: total saldo -->
+        <div class="bento-card bento-card--balance" id="card-balance">
+          <p class="card-label">Total Saldo</p>
+          <p class="card-value card-value--hero" id="display-balance">Rp 0</p>
+          <p class="card-sub" id="display-balance-sub">dihitung dari semua transaksi</p>
+        </div>
+
+        <!-- card: pemasukan bulan ini -->
+        <div class="bento-card bento-card--income" id="card-income">
+          <p class="card-label">Pemasukan</p>
+          <p class="card-value card-value--income" id="display-income">Rp 0</p>
+          <p class="card-sub">bulan ini</p>
+        </div>
+
+        <!-- card: pengeluaran bulan ini -->
+        <div class="bento-card bento-card--expense" id="card-expense">
+          <p class="card-label">Pengeluaran</p>
+          <p class="card-value card-value--expense" id="display-expense">Rp 0</p>
+          <p class="card-sub">bulan ini</p>
+        </div>
+
+        <!-- card: sisa budget -->
+        <div class="bento-card bento-card--budget" id="card-budget">
+          <p class="card-label">Sisa Budget</p>
+          <p class="card-value" id="display-remaining">Rp 0</p>
+          <div class="budget-bar-track">
+            <div class="budget-bar-fill" id="budget-bar-fill"></div>
+          </div>
+          <p class="card-sub" id="display-budget-pct">0% dari budget bulanan</p>
+        </div>
+
+        <!-- card: grafik arus kas -->
+        <div class="bento-card bento-card--chart" id="card-chart">
+          <p class="card-label">Arus Kas — Juni 2025</p>
+          <canvas id="cashflow-chart" width="400" height="160"></canvas>
+        </div>
+
+        <!-- card: transaksi terbaru -->
+        <div class="bento-card bento-card--recent" id="card-recent">
+          <div class="card-header-row">
+            <p class="card-label">Transaksi Terbaru</p>
+            <button class="btn-ghost btn-sm" data-tab-link="analytics">Lihat Semua →</button>
+          </div>
+          <ul class="txn-list" id="recent-txn-list">
+            <!-- diisi dom-handler.js -->
+          </ul>
+        </div>
+
+      </div><!-- /bento-grid -->
+    </section>
+
+    <!-- ANALYTICS -->
+    <section class="tab-panel hidden" id="tab-analytics">
+      <header class="page-header">
+        <div>
+          <p class="page-eyebrow">Pengeluaran</p>
+          <h1 class="page-title">Smart Analytics</h1>
+        </div>
+        <div class="filter-group" id="analytics-filter">
+          <button class="filter-chip active" data-filter="all">Semua</button>
+          <!-- chip kategori diisi dinamis dom-handler.js -->
+        </div>
+      </header>
+
+      <div class="bento-grid bento-grid--analytics">
+        <!-- card: donut chart kategori -->
+        <div class="bento-card bento-card--donut">
+          <p class="card-label">Distribusi Pengeluaran</p>
+          <canvas id="category-chart" width="260" height="260"></canvas>
+        </div>
+
+        <!-- card: list kategori + bar -->
+        <div class="bento-card bento-card--catlist">
+          <p class="card-label">Per Kategori</p>
+          <ul class="category-list" id="category-list">
+            <!-- diisi dom-handler.js -->
+          </ul>
+        </div>
+
+        <!-- card: semua transaksi -->
+        <div class="bento-card bento-card--all-txn">
+          <div class="card-header-row">
+            <p class="card-label">Semua Transaksi</p>
+            <span class="txn-count" id="txn-count">0 transaksi</span>
+          </div>
+          <ul class="txn-list txn-list--full" id="all-txn-list">
+            <!-- diisi dom-handler.js -->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section class="tab-panel hidden" id="tab-goals">
+      <header class="page-header">
+        <div>
+          <p class="page-eyebrow">Target Tabungan</p>
+          <h1 class="page-title">Financial Goals</h1>
+        </div>
+        <button class="btn-primary" id="btn-add-goal">+ Goal Baru</button>
+      </header>
+
+      <div class="bento-grid bento-grid--goals" id="goals-grid">
+        <!-- card goals diisi dom-handler.js menggunakan <template> -->
+      </div>
+    </section>
+
+    <!-- RECURRING -->
+    <section class="tab-panel hidden" id="tab-recurring">
+      <header class="page-header">
+        <div>
+          <p class="page-eyebrow">Otomatis</p>
+          <h1 class="page-title">Recurring Tracker</h1>
+        </div>
+        <button class="btn-primary" id="btn-add-recurring">+ Tambah</button>
+      </header>
+
+      <div class="bento-grid bento-grid--recurring" id="recurring-grid">
+        <!-- card recurring diisi dom-handler.js menggunakan <template> -->
+      </div>
+    </section>
+
+    <!-- LAPORAN -->
+    <section class="tab-panel hidden" id="tab-report">
+      <header class="page-header">
+        <div>
+          <p class="page-eyebrow">Ringkasan</p>
+          <h1 class="page-title">Laporan Bulanan</h1>
+        </div>
+        <button class="btn-primary" id="btn-export">↓ Export CSV</button>
+      </header>
+
+      <div class="bento-grid bento-grid--report">
+        <div class="bento-card bento-card--report-summary" id="report-summary">
+          <!-- diisi dom-handler.js -->
+        </div>
+        <div class="bento-card bento-card--report-detail" id="report-detail">
+          <!-- diisi dom-handler.js -->
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main-content -->
+
+
+  <!-- MODAL — tambah transaksi -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal-txn" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Tambah Transaksi</h2>
+        <button class="btn-icon" id="btn-close-modal" aria-label="Tutup modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- type toggle -->
+        <div class="type-toggle" id="type-toggle">
+          <button class="type-btn active" data-type="expense">Pengeluaran</button>
+          <button class="type-btn" data-type="income">Pemasukan</button>
+        </div>
+
+        <!-- amount -->
+        <div class="field-group">
+          <label class="field-label" for="txn-amount">Jumlah</label>
+          <div class="input-prefix-wrap">
+            <span class="input-prefix">Rp</span>
+            <input type="number" class="field-input" id="txn-amount" placeholder="0" min="0" />
+          </div>
+        </div>
+
+        <!-- category -->
+        <div class="field-group">
+          <label class="field-label" for="txn-category">Kategori</label>
+          <select class="field-input field-select" id="txn-category">
+            <option value="Makan">🍜 Makan</option>
+            <option value="Kopi">☕ Kopi</option>
+            <option value="Transportasi">🛵 Transportasi</option>
+            <option value="Kuliah">📚 Kuliah</option>
+            <option value="Langganan">📱 Langganan</option>
+            <option value="Tempat Tinggal">🏠 Tempat Tinggal</option>
+            <option value="Utilitas">⚡ Utilitas</option>
+            <option value="Hiburan">🎮 Hiburan</option>
+            <option value="Kesehatan">💊 Kesehatan</option>
+            <option value="Beasiswa">🎓 Beasiswa</option>
+            <option value="Freelance">💼 Freelance</option>
+            <option value="Lainnya">📦 Lainnya</option>
+          </select>
+        </div>
+
+        <!-- date -->
+        <div class="field-group">
+          <label class="field-label" for="txn-date">Tanggal</label>
+          <input type="date" class="field-input" id="txn-date" />
+        </div>
+
+        <!-- note -->
+        <div class="field-group">
+          <label class="field-label" for="txn-note">Catatan <span class="optional">(opsional)</span></label>
+          <input type="text" class="field-input" id="txn-note" placeholder="Beli apa nih?" maxlength="80" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-ghost" id="btn-cancel-modal">Batal</button>
+        <button class="btn-primary" id="btn-save-txn">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- REUSABLE COMPONENTS -->
+
+  <!-- card goal -->
+  <template id="tmpl-goal-card">
+    <div class="bento-card goal-card">
+      <div class="goal-card__top">
+        <span class="goal-emoji"></span>
+        <div class="goal-card__meta">
+          <p class="goal-name"></p>
+          <p class="goal-deadline"></p>
+        </div>
+        <span class="goal-pct-badge"></span>
+      </div>
+      <div class="goal-progress-track">
+        <div class="goal-progress-fill"></div>
+      </div>
+      <div class="goal-card__bottom">
+        <span class="goal-current"></span>
+        <span class="goal-separator">dari</span>
+        <span class="goal-target"></span>
+      </div>
+      <button class="btn-ghost btn-sm goal-topup-btn">+ Top Up</button>
+    </div>
+  </template>
+
+  <!-- card recurring -->
+  <template id="tmpl-recurring-card">
+    <div class="bento-card recurring-card">
+      <div class="recurring-card__top">
+        <p class="recurring-name"></p>
+        <span class="recurring-status-dot"></span>
+      </div>
+      <p class="recurring-amount"></p>
+      <div class="recurring-card__meta">
+        <span class="recurring-day"></span>
+        <span class="recurring-category"></span>
+      </div>
+      <div class="recurring-limit-bar-track hidden">
+        <div class="recurring-limit-bar-fill"></div>
+      </div>
+    </div>
+  </template>
+
+  <!-- item transaksi -->
+  <template id="tmpl-txn-item">
+    <li class="txn-item">
+      <div class="txn-item__left">
+        <span class="txn-category-dot"></span>
+        <div class="txn-item__info">
+          <p class="txn-category-name"></p>
+          <p class="txn-note"></p>
+        </div>
+      </div>
+      <div class="txn-item__right">
+        <p class="txn-amount"></p>
+        <p class="txn-date"></p>
+      </div>
+    </li>
+  </template>
+
+  <!-- item kategori di analytics -->
+  <template id="tmpl-category-item">
+    <li class="category-item">
+      <div class="category-item__top">
+        <span class="cat-name"></span>
+        <span class="cat-amount"></span>
+      </div>
+      <div class="category-bar-track">
+        <div class="category-bar-fill"></div>
+      </div>
+    </li>
+  </template>
+
+
+  <!-- SCRIPTS
+       1. storage.js  → siapin read/write
+       2. app.js      → init state + load dari localStorage
+       3. dom-handler.js → render UI dari state -->
+  <!-- toast notification container -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // run loadState() setelah app.js selesai mendefinisikan window.appState
+    // biar data dari localStorage bisa merge dengan benar
+    window.loadState();
+  </script>
+  <script src="dom-handler.js"></script>
+
+</body>
+</html>
