@@ -353,8 +353,8 @@ input, select, textarea {
 
 /* ── dashboard grid areas ── */
 .bento-card--balance  { grid-column: span 5; }
-.bento-card--primary-color   { grid-column: span 3; }
-.bento-card--danger-color  { grid-column: span 2; }
+.bento-card--income   { grid-column: span 3; }
+.bento-card--expense  { grid-column: span 2; }
 .bento-card--budget   { grid-column: span 2; }
 .bento-card--chart    { grid-column: span 7; }
 .bento-card--recent   { grid-column: span 5; }
@@ -1022,8 +1022,8 @@ input, select, textarea {
   .bento-card--balance,
   .bento-card--chart  { grid-column: span 12; }
 
-  .bento-card--primary-color,
-  .bento-card--danger-color,
+  .bento-card--income,
+  .bento-card--expense,
   .bento-card--budget { grid-column: span 4; }
 
   .bento-card--recent { grid-column: span 12; }
@@ -1065,8 +1065,8 @@ input, select, textarea {
 
   /* full width di mobile */
   .bento-card--balance,
-  .bento-card--primary-color,
-  .bento-card--danger-color,
+  .bento-card--income,
+  .bento-card--expense,
   .bento-card--budget,
   .bento-card--chart,
   .bento-card--recent,
@@ -1291,11 +1291,11 @@ input, select, textarea {
   pointer-events: none;
 }
 
-.bento-card--primary-color {
+.bento-card--income {
   border-left: 3px solid var(--primary-color);
 }
 
-.bento-card--danger-color {
+.bento-card--expense {
   border-left: 3px solid var(--danger-color);
 }
 
@@ -1503,8 +1503,8 @@ button:focus-visible {
 
 /* stagger delays for dashboard cards */
 .bento-card--balance  { animation-delay: 0ms; }
-.bento-card--primary-color   { animation-delay: 40ms; }
-.bento-card--danger-color  { animation-delay: 80ms; }
+.bento-card--income   { animation-delay: 40ms; }
+.bento-card--expense  { animation-delay: 80ms; }
 .bento-card--budget   { animation-delay: 120ms; }
 .bento-card--chart    { animation-delay: 60ms; }
 .bento-card--recent   { animation-delay: 100ms; }
