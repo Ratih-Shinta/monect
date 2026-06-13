@@ -1,4 +1,4 @@
-\window.appState = {
+window.appState = {
 
   // user profile 
   profile: {
