@@ -1,7 +1,5 @@
 const STORAGE_KEY = "monect_state_v1";
 
-//  simpen state ke localStorage.
-//  cma simpan bagian yang perlu persisten (bukan ui state).
 window.saveState = function () {
   const { profile, transactions, goals, recurring } = window.appState;
 
@@ -14,9 +12,7 @@ window.saveState = function () {
   }
 };
 
-
 // load state dari localStorage dan merge ke window.appState.
-// kalau ga ada data tersimpan, appState tetap pke data dummy dari app.js.
 window.loadState = function () {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -28,7 +24,7 @@ window.loadState = function () {
 
     const saved = JSON.parse(raw);
 
-    // merge cma field yang ada di saved data
+    // Merge hanya field yang ada di saved data
     if (saved.profile)      window.appState.profile      = saved.profile;
     if (saved.transactions) window.appState.transactions = saved.transactions;
     if (saved.goals)        window.appState.goals        = saved.goals;
@@ -38,13 +34,11 @@ window.loadState = function () {
     console.log(`[Monect] ${saved.transactions?.length ?? 0} transaksi ditemukan.`);
   } catch (err) {
     console.error("[Monect] Gagal membaca state, reset ke dummy:", err);
-    // jangan crash — biarin app.js punya data dummy yang jalan
+    // jgn crash — biarin app.js punya data dummy yang jalan
   }
 };
 
-/**
- * hapus semua data tersimpan (untuk fitur "reset akun").
- */
+// reset 
 window.clearState = function () {
   try {
     localStorage.removeItem(STORAGE_KEY);
